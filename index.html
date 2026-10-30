@@ -1,0 +1,248 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jobsworth Graduate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-title" content="Jobsworth Grad">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d5a47">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: branded header with counts, sticky search and filter bar, single column of role cards */
+:root{
+  --bg:#f3f6f4; --surface:#ffffff; --ink:#17251f; --muted:#5b6c64; --line:#d9e3de;
+  --accent:#1d5a47; --accent-soft:#e1efe9; --gold:#c08a14;
+  --scheme:#1d5a47; --scheme-soft:#ddefe7; --role:#6a5a1e; --role-soft:#f5eedb; --low-soft:#ebefed;
+  --hero1:#1d5a47; --hero2:#123d30;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1714; --surface:#16211d; --ink:#e4ede8; --muted:#94a89e; --line:#26352f;
+  --accent:#6cc9a3; --accent-soft:#183428; --gold:#e3ad45;
+  --scheme:#6cc9a3; --scheme-soft:#183428; --role:#e3c46c; --role-soft:#33290f; --low-soft:#1f2b26;
+  --hero1:#1a4f3f; --hero2:#0f3027; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1714; --surface:#16211d; --ink:#e4ede8; --muted:#94a89e; --line:#26352f;
+  --accent:#6cc9a3; --accent-soft:#183428; --gold:#e3ad45;
+  --scheme:#6cc9a3; --scheme-soft:#183428; --role:#e3c46c; --role-soft:#33290f; --low-soft:#1f2b26;
+  --hero1:#1a4f3f; --hero2:#0f3027; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto}
+.hero{margin-top:12px;background:linear-gradient(140deg,var(--hero1),var(--hero2));color:#fff;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;flex:none}
+h1{font:700 28px/1 var(--f-display);margin:0;letter-spacing:-.01em;color:#fff}
+.clock{font:500 13px var(--f-mono);color:rgba(255,255,255,.78);margin-top:5px;font-variant-numeric:tabular-nums}
+.upd{font-size:13px;color:rgba(255,255,255,.85)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font:500 11px var(--f-body);color:rgba(255,255,255,.75)}
+.stats div{background:rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stats b{color:#fff;font:700 20px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.stats span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;margin-top:6px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row.top{flex-wrap:nowrap}
+input[type=search],select{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.row.top input{flex:1 1 auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed=true],.chip.on,.chip.done{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.ftog{flex:none;display:inline-flex;align-items:center;gap:6px}
+.favbtn{flex:none;font-size:15px}
+.favbtn[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#1b1300}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--gold);color:#1b1300;font:700 12px/1 var(--f-body)}
+.lbl{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);min-width:64px}
+.fpanel{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding-block:4px 2px}
+.fbtns{justify-content:space-between}
+.resline{font:12px var(--f-mono);color:var(--muted)}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.job{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--role);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.job.scheme{border-left-color:var(--scheme)}
+.job.dim{opacity:.55}
+.head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.t{min-width:0}
+.t a{font:600 17px/1.3 var(--f-display);color:var(--ink);text-decoration:none}
+.t a:hover{color:var(--accent);text-decoration:underline}
+.meta{color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:2px}
+.pay{font:500 14px var(--f-mono);font-variant-numeric:tabular-nums}
+.sum{color:var(--muted);font-size:13.5px;margin:0;overflow-wrap:anywhere}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font:600 12px var(--f-body);border-radius:999px;padding:2px 9px;background:var(--low-soft);color:var(--muted)}
+.pill.scheme{background:var(--scheme-soft);color:var(--scheme)}
+.pill.role{background:var(--role-soft);color:var(--role)}
+.pill.new{background:var(--accent);color:var(--bg)}
+.star{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:20px;cursor:pointer}
+.star[aria-pressed=true]{background:var(--role-soft);border-color:var(--gold);color:var(--gold)}
+.act{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px}
+.act select{padding:5px 8px;font-size:13px}
+.age{font:12px var(--f-mono);color:var(--muted)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:28px;text-align:center;color:var(--muted)}
+@media (max-width:560px){
+  .hero{border-radius:16px;padding:14px;gap:10px}
+  h1{font-size:23px}
+  .logo{width:42px;height:42px}
+  .stats{gap:6px}.stats div{padding:7px 8px}.stats b{font-size:17px}.stats span{font-size:10px}
+  #sort{max-width:104px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}[hidden]{display:none!important}</style></head><body>
+
+<div class="wrap">
+<header class="hero">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#ffffff"/><path d="M37 14h8v24c0 8.5-5.2 13-13 13-4.6 0-8.2-1.6-10.6-4.6l5.3-5.3c1.4 1.7 3.1 2.6 5.3 2.6 3.4 0 5-2 5-6.2V14z" fill="#1d5a47"/><rect x="18" y="54" width="28" height="4" rx="2" fill="#e3ad45"/></svg>
+    <div>
+      <h1>Jobsworth Graduate</h1>
+      <div class="clock" id="clock"></div>
+    </div>
+  </div>
+  <div class="upd" id="upd">Graduate schemes and first business roles, London and the South East</div>
+  <div class="upd">Sources: Prospects, TARGETjobs, Bright Network, Milkround, Adzuna</div>
+  <div class="stats" aria-live="polite">
+    <div><b id="sTotal">0</b><span>live</span></div>
+    <div><b id="sScheme">0</b><span>schemes</span></div>
+    <div><b id="sNew">0</b><span>new this week</span></div>
+    <div><b id="sFav">0</b><span>favourites</span></div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="row top">
+    <input type="search" id="q" placeholder="Search title, employer, town" aria-label="Search roles">
+    <button type="button" class="chip favbtn" id="favonly" aria-pressed="false" aria-label="Show favourites only">★</button>
+    <button type="button" class="chip ftog" id="ftoggle" aria-expanded="false" aria-controls="fpanel">Filters</button>
+    <select id="sort" aria-label="Sort">
+      <option value="scheme">Schemes first</option>
+      <option value="new">Newest</option>
+      <option value="pay">Pay</option>
+    </select>
+  </div>
+  <div class="fpanel" id="fpanel" hidden>
+    <div class="row"><span class="lbl">Type</span><div class="chips" id="cType"></div></div>
+    <div class="row"><span class="lbl">Area</span><div class="chips" id="cArea"></div></div>
+    <div class="row"><span class="lbl">Where</span><div class="chips" id="cRegion"></div></div>
+    <div class="row"><span class="lbl">Source</span><div class="chips" id="cSource"></div></div>
+    <div class="row"><span class="lbl">Working</span><div class="chips" id="cWork"></div></div>
+    <div class="row">
+      <select id="minpay" aria-label="Minimum salary">
+        <option value="0">Any salary</option>
+        <option value="25000">£25k+</option>
+        <option value="28000">£28k+</option>
+        <option value="32000">£32k+</option>
+        <option value="38000">£38k+</option>
+      </select>
+      <select id="status" aria-label="Status">
+        <option value="active">Hide dismissed</option>
+        <option value="all">All statuses</option>
+        <option value="saved">Saved</option>
+        <option value="applied">Applied</option>
+        <option value="interview">Interview</option>
+        <option value="dismissed">Dismissed</option>
+      </select>
+    </div>
+    <div class="row fbtns"><button type="button" class="chip" id="fclear">Clear all</button><button type="button" class="chip done" id="fdone">Show <span id="fcount">0</span> roles</button></div>
+  </div>
+  <div class="resline" id="resline"></div>
+</div>
+
+<div class="list" id="list"><div class="empty">Loading roles. The daily search adds new graduate roles here each morning.</div></div>
+</div>
+
+<script>
+const TYPES=["Graduate scheme","Entry-level role"];
+const AREAS=["General management","Commercial & marketing","Finance & consulting","HR, ops & supply chain"];
+const REGIONS=["London","South East","Various locations"];
+const SOURCES=["Prospects","TARGETjobs","Bright Network","Milkround","Adzuna"];
+const WORK=["Hybrid","Remote","On-site","Not stated"];
+const STATUSES=[["new","New"],["saved","Saved"],["applied","Applied"],["interview","Interview"],["rejected","Rejected"],["dismissed","Dismissed"]];
+const state={q:"",sort:"scheme",min:0,status:"active",type:new Set(),area:new Set(),region:new Set(),work:new Set(),source:new Set(),fav:false};
+const $=id=>document.getElementById(id);
+const NOW=new Date();
+let jobs=[];
+function lget(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let FAV=lget("jg-fav",{}),ST=lget("jg-status",{});
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function chips(id,items,set){const box=$(id);items.forEach(v=>{const b=el("button","chip",v);b.type="button";b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{set.has(v)?set.delete(v):set.add(v);b.setAttribute("aria-pressed",set.has(v));render()};box.appendChild(b)})}
+chips("cType",TYPES,state.type);chips("cArea",AREAS,state.area);chips("cRegion",REGIONS,state.region);chips("cWork",WORK,state.work);chips("cSource",SOURCES,state.source);
+$("q").oninput=e=>{state.q=e.target.value.toLowerCase();render()};
+$("sort").onchange=e=>{state.sort=e.target.value;lset("jg-sort",state.sort);render()};
+const ss=lget("jg-sort",null);if(ss){state.sort=ss;$("sort").value=ss}
+$("minpay").onchange=e=>{state.min=+e.target.value;render()};
+$("status").onchange=e=>{state.status=e.target.value;render()};
+const fp=$("fpanel"),ft=$("ftoggle");
+ft.onclick=()=>{fp.hidden=!fp.hidden;ft.setAttribute("aria-expanded",!fp.hidden)};
+$("fdone").onclick=()=>{fp.hidden=true;ft.setAttribute("aria-expanded","false");window.scrollTo({top:0})};
+$("fclear").onclick=()=>{[state.type,state.area,state.region,state.work,state.source].forEach(s=>s.clear());state.min=0;state.status="active";state.fav=false;
+  $("minpay").value="0";$("status").value="active";$("favonly").setAttribute("aria-pressed","false");
+  document.querySelectorAll(".fpanel .chip[aria-pressed]").forEach(b=>b.setAttribute("aria-pressed","false"));render()};
+$("favonly").onclick=()=>{state.fav=!state.fav;$("favonly").setAttribute("aria-pressed",state.fav);render()};
+function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})+" · "+d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+tick();setInterval(tick,15000);
+function daysSince(d){if(!d)return null;const t=new Date(d.length===10?d+"T12:00:00":d);return isNaN(t)?null:Math.floor((NOW-t)/864e5)}
+function ago(d){const n=daysSince(d);if(n===null)return "date not given";if(n<=0)return "today";if(n===1)return "yesterday";if(n<14)return n+" days ago";return new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+function activeCount(){return state.type.size+state.area.size+state.region.size+state.work.size+state.source.size+(state.min?1:0)+(state.status!=="active"?1:0)+(state.fav?1:0)}
+function render(){
+  const v=jobs.filter(j=>{
+    if(state.q&&![j.title,j.employer,j.location].join(" ").toLowerCase().includes(state.q))return false;
+    if(state.type.size&&!state.type.has(j.type))return false;
+    if(state.area.size&&!j.areas.some(a=>state.area.has(a)))return false;
+    if(state.region.size&&!state.region.has(j.region))return false;
+    if(state.work.size&&!state.work.has(j.work||"Not stated"))return false;
+    if(state.source.size&&!state.source.has(j.source))return false;
+    if(state.min&&!((j.salaryMax||j.salaryMin||0)>=state.min))return false;
+    if(state.fav&&!FAV[j.id])return false;
+    const s=ST[j.id]||"new";
+    if(state.status==="active"&&s==="dismissed")return false;
+    if(!["active","all"].includes(state.status)&&s!==state.status)return false;
+    return true});
+  v.sort((a,b)=>{
+    if(state.sort==="pay")return (b.salaryMax||b.salaryMin||0)-(a.salaryMax||a.salaryMin||0);
+    if(state.sort==="new")return (b.posted||"").localeCompare(a.posted||"");
+    return ((a.type==="Graduate scheme"?0:1)-(b.type==="Graduate scheme"?0:1))||(b.posted||"").localeCompare(a.posted||"")});
+  const n=activeCount();ft.textContent="Filters";if(n){ft.appendChild(el("span","badge",n))}ft.classList.toggle("on",n>0);
+  $("fcount").textContent=v.length;$("resline").textContent=v.length+" role"+(v.length===1?"":"s")+(n?" match your filters":"");
+  const live=jobs.filter(j=>ST[j.id]!=="dismissed");
+  $("sTotal").textContent=live.length;
+  $("sScheme").textContent=live.filter(j=>j.type==="Graduate scheme").length;
+  $("sNew").textContent=live.filter(j=>{const d=daysSince(j.foundAt);return d!==null&&d<7}).length;
+  $("sFav").textContent=Object.keys(FAV).filter(id=>jobs.some(j=>j.id===id)).length;
+  const list=$("list");list.textContent="";
+  if(!v.length){list.appendChild(el("div","empty",jobs.length?"No roles match these filters. Clear a filter to see more.":"No roles yet. The daily search adds roles here each morning."));return}
+  v.forEach(j=>list.appendChild(card(j)));
+}
+function card(j){
+  const s=ST[j.id]||"new",scheme=j.type==="Graduate scheme";
+  const c=el("article","job"+(scheme?" scheme":"")+(s==="dismissed"?" dim":""));
+  const t=el("div","t");const a=el("a",null,j.title);a.href=j.url;a.target="_blank";a.rel="noopener";t.appendChild(a);
+  const m=el("div","meta");m.append(el("span",null,j.employer),el("span",null,j.location+(j.work&&j.work!=="Not stated"?" · "+j.work:"")));t.appendChild(m);
+  const st=el("button","star",FAV[j.id]?"★":"☆");st.type="button";st.setAttribute("aria-pressed",!!FAV[j.id]);st.setAttribute("aria-label",(FAV[j.id]?"Remove from":"Add to")+" favourites: "+j.title);
+  st.onclick=()=>{if(FAV[j.id])delete FAV[j.id];else FAV[j.id]=1;lset("jg-fav",FAV);render()};
+  const hd=el("div","head");hd.append(t,st);c.append(hd,el("div","pay",j.salary||"Salary not given"));
+  const tg=el("div","tags");
+  const fd=daysSince(j.foundAt);if(fd!==null&&fd<2&&s==="new")tg.append(el("span","pill new","New"));
+  tg.append(el("span","pill "+(scheme?"scheme":"role"),j.type));
+  j.areas.forEach(x=>tg.append(el("span","pill",x)));
+  if(j.closing){const cd=new Date(j.closing+"T12:00:00");if(!isNaN(cd))tg.append(el("span","pill role","Closes "+cd.toLocaleDateString("en-GB",{day:"numeric",month:"short"})))}c.append(tg);
+  if(j.summary)c.append(el("p","sum",j.summary.replace(/\s*\S*$/,"")+"…"));
+  const act=el("div","act");
+  const sel=el("select");sel.id="st-"+j.id;sel.setAttribute("aria-label","Status for "+j.title);
+  STATUSES.forEach(([v,l])=>{const o=el("option",null,l);o.value=v;sel.appendChild(o)});sel.value=s;
+  sel.onchange=()=>{ST[j.id]=sel.value;lset("jg-status",ST);render()};
+  act.append(el("span","age","Posted "+ago(j.posted)+" · "+(j.source||"")),sel);c.append(act);
+  return c;
+}
+fetch("jobs.json?v="+Date.now()).then(r=>r.json()).then(d=>{
+  jobs=d.jobs||[];
+  if(d.updated){const u=new Date(d.updated);if(!isNaN(u))$("upd").textContent="Roles last updated "+u.toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
+  render()}).catch(()=>{$("list").textContent="";$("list").appendChild(el("div","empty","The role list could not load. Reload the page to try again."))});
+</script>
+</body></html>
