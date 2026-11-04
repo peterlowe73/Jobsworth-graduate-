@@ -240,7 +240,8 @@ function card(j){
   act.append(el("span","age","Posted "+ago(j.posted)+" · "+(j.source||"")),sel);c.append(act);
   return c;
 }
-fetch("jobs.json?v="+Date.now()).then(r=>r.json()).then(d=>{
+const SB="https://jolgznlrrxjowoypukdg.supabase.co/rest/v1/jobsworth_jobs?select=data,found_at&order=found_at.desc&limit=2000",SBK="sb_publishable_zJ3A2zfI_9sxdCgbWv0XbA_QppNei68";
+fetch(SB,{headers:{apikey:SBK,Authorization:"Bearer "+SBK}}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(rows=>{if(!rows.length)throw 0;return {updated:rows[0].found_at,jobs:rows.map(x=>x.data)}}).catch(()=>fetch("jobs.json?v="+Date.now()).then(r=>r.json())).then(d=>{
   jobs=d.jobs||[];
   if(d.updated){const u=new Date(d.updated);if(!isNaN(u))$("upd").textContent="Roles last updated "+u.toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
   render()}).catch(()=>{$("list").textContent="";$("list").appendChild(el("div","empty","The role list could not load. Reload the page to try again."))});
