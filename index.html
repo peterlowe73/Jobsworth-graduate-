@@ -240,7 +240,7 @@ function card(j){
   act.append(el("span","age","Posted "+ago(j.posted)+" · "+(j.source||"")),sel);c.append(act);
   return c;
 }
-const SB="https://jolgznlrrxjowoypukdg.supabase.co/rest/v1/jobsworth_jobs?select=data,found_at&order=found_at.desc&limit=2000",SBK="sb_publishable_zJ3A2zfI_9sxdCgbWv0XbA_QppNei68";
+const SB="https://fftywwcasryemafatmak.supabase.co/rest/v1/jobsworth_jobs?select=data,found_at&order=found_at.desc&limit=2000",SBK="sb_publishable_LPSrKo4L2aMXkuJYwwlJUg_ZivEtAOV";
 fetch(SB,{headers:{apikey:SBK,Authorization:"Bearer "+SBK}}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(rows=>{if(!rows.length)throw 0;const cut=new Date(Date.now()-60*864e5).toISOString().slice(0,10),seen=new Set();return {updated:rows[0].found_at,jobs:rows.map(x=>x.data).filter(j=>{if(j.posted&&j.posted<cut)return false;const k=(j.title+"|"+j.employer).toLowerCase();if(seen.has(k))return false;seen.add(k);return true})}}).catch(()=>fetch("jobs.json?v="+Date.now()).then(r=>r.json())).then(d=>{
   jobs=d.jobs||[];
   if(d.updated){const u=new Date(d.updated);if(!isNaN(u))$("upd").textContent="Roles last updated "+u.toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
